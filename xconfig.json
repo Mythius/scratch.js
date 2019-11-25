@@ -1,0 +1,7 @@
+{
+	"owner": "noname",
+	"name": "untitled",
+	"id": "0",
+	"sprites": [ {"name":"Sprite1" , "costumes":["example.png"]} ],
+	"data": null
+}

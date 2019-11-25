@@ -45,12 +45,19 @@ function createProject(name,owner,err){
 		if(ok){
 			save.push(new Project(name,owner));
 			file.save('save.json',JSON.stringify(save));
+			cd(name);
+			file.read('xconfig.json',e=>{
+				let config = JSON.parse(e);
+				config.owner = owner;
+				file.save('projects/'+name+'/config.json',JSON.stringify(config));
+			});
 		} else {
-			err('Name Taken');
+			err(1);
 		}
 	});
 }
 
+var errors = ['Success','Name Taken'];
 
 class Project{
 	constructor(n,o){
@@ -59,26 +66,33 @@ class Project{
 	}
 }
 
-createProject('proj2','Matthias',e=>{
-	if(e) console.log(e);
-});
 
 
 
 const port = 80;
 const path = __dirname+'/';
 
+
+
+
+// SERVE WEBSITE FILES
 app.use(express.static(path+'site/'));
 app.get(/.*/,function(request,response){
 	response.sendFile(path+'site/');
 });
 
+
+
+
+
 http.listen(port,()=>{console.log('Serving Port: '+port)});
 
 io.on('connection',function(socket){
-	var id;
-	socket.on('')
-	socket.on('new',config=>{
-
+	var owner = "Matthias";
+	socket.on('new',name=>{
+		createProject(name,owner,e=>{
+			if(e) console.log(errors[e]);
+		});
 	});
+	//socket.emit('test');
 });
