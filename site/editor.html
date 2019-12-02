@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Scratch.JS</title>
+	<link rel="stylesheet" href="runtime.css">
+	<link rel="stylesheet" href="editor.css">
+	<script src=helpers.js></script>
+	<script src=sprite.js></script>
+	<script src=scratch.js></script>	
+	<script src=/socket.io/socket.io.js></script>
+</head>
+<body>
+	<div class="stage">
+		<canvas width=480 height=360></canvas>
+		<!-- ALL OF THE ACTUAL GAME THINGS GO HERE -->
+	</div>
+
+	<editor>
+		<runbar>
+			<img title=start id=start src="start.png">
+			<img title=stop id=stop src="stop.png">
+			<img title=save id=save src="save.png">
+			<img title=download id=download src="download.png">
+		</runbar>
+		<toolbar></toolbar>
+		<main>
+			<code class=switch onblur="c.update()" spellcheck="false" contenteditable="true">
+			</code>
+			<assets class=switch>
+				<ul id=spritelist>
+					Sprites:
+				</ul>
+				<ul id=assetlist>
+					Assets:
+				</ul>
+			</assets>
+			<upload class=switch>
+				<button id=imbut>
+					Upload Images
+					<input id=upimg multiple accept='.png,.jpg,.gif,.jpeg' type="file">
+				</button>
+				<images></images>
+			</upload>
+		</main>
+		<tabs>
+			<button class="tab selected">Code</button>
+			<button class="tab">Assets</button>
+			<button class="tab">Upload</button>
+		</tabs>
+		<div id=notify>Project Data</div>
+	</editor>
+
+
+	<script src="main.js"></script>
+	<script src="editor.js"></script>
+
+</body>
+</html>

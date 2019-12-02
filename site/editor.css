@@ -1,0 +1,186 @@
+*{
+	box-sizing: border-box;
+	font-family: courier;
+	outline: 0;
+	cursor: default;
+}
+#notify{
+	position: fixed;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+	background-color: #222;
+	color: white;
+	height: 30px;
+	padding: 5px;
+}
+toolbar{
+	position: fixed;
+	width: 50px;
+	left: 0;
+	top: 50px;
+	background-color: #222;
+	height: calc(100% - 90px);
+}
+main{
+	position: fixed;
+	right: 10px;
+	width: calc(100% - 560px);
+	height: calc(100% - 90px);
+	background-color: #222;
+	top: 50px;
+	padding: 5px;
+}
+/* CODE EDITOR THEME -- IMPORTED FROM MARKED TEXT IN GLIB */
+code{
+	position: absolute;
+	font-family: courier;
+	font-weight: bold;
+	font-size: 18px;
+	width: 97.5%;
+	height: 96%;
+	margin: 5px;
+	outline: 0;
+	border-radius: 2px;
+	border: 2px solid black;
+	color: white;
+}
+code:focus{
+	/**/
+	border: 2px solid blue;
+}
+.g{color:forestgreen;}
+.p{color:purple;}
+.c{color:cyan;}
+.o{color:orange;}
+.k{color:#ff1c49;}
+.t{color:tan;}
+.b{color:blue;}
+.y{color:yellow;}
+.gr{color: #444;}
+.d{color:#ff00d4;}
+/* ---- END OF CODE EDITOR ------------ */
+tabs{
+	position: fixed;
+	right: 10px;
+	top: 0;
+	width: calc(100% - 560px);
+	height: 50px;
+	padding-top: 10px;
+	padding-left: 10px;
+}
+.tab{
+	width: 160px;
+	height: 80%;
+	display: inline-block;
+	background-color: gray;
+	padding: 3px;
+	font-weight: bold;
+	font-size: 16px;
+	text-align: center;
+	border: 0;
+	box-shadow: 3px 3px 3px black;
+	transition: background-color .3s;
+}
+.tab:hover{
+	/**/
+	background-color: darkgray;
+}
+.selected{
+	background-color: white;
+	color: black;
+}
+.selected:hover{
+	/* Override any other color it may be */
+	background-color: white !important;
+}
+#imbut{
+	/* Image Button  -- Replaces input:file */
+	margin-bottom: 5px;
+}
+upload{
+	width: 99%;
+	height: 99%;
+}
+images{
+	width: 100%;
+	height: 100%;
+	display: grid;
+	grid-template-columns: repeat(auto-fill,minmax(0px,180px));
+}
+.switch{
+	position: absolute;
+	visibility: hidden;
+	overflow-y: scroll;
+}
+input[type=file]{
+	color: white;
+	margin-bottom: 5px;
+	display: none;
+}
+input{
+	/**/
+	margin-bottom: 5px;
+}
+button{
+	background-color: black;
+	color: white;
+	border: 2px solid white;
+	transition: background-color .3s;
+}
+button:hover{
+	/* these comments are just to make it two lines / collapsable */
+	background-color: #444;
+}
+imghold{
+	border: 3px solid white;
+	display: table;
+	padding: 3px;
+	margin: 5px;
+	text-align: center;
+	image-rendering: pixelated;
+	margin-left: 0;
+	margin-top: 0;
+}
+imghold > img{
+	/* hopefully this doesn't resize imported image */
+	width: 100px;
+}
+assets{
+	color: white;
+	display: grid;
+	grid-template-columns: 50% 50%;
+	width: 99%;
+	height: 99%;
+}
+#assetlist > ol{
+	display: grid;
+	grid-template-columns: 10% 90%;
+	padding: 0;
+	text-align: center;
+	background-color: gray;
+	border-bottom: 2px solid white;
+	transition: background-color .3s;
+	padding: 5px;
+}
+#assetlist > ol > *{
+	margin: 0;
+	width: 70%;
+}
+#assetlist > ol:last-of-type{
+	/**/
+	border-bottom: 0;
+}
+#assetlist > ol:hover{
+	/**/
+	background-color: darkgray;
+}
+runbar{
+	position: fixed;
+	left: 50px;
+	top: 0;
+	width: 500px;
+	height: 50px;
+	background-color: #222;
+	padding: 8px;
+}

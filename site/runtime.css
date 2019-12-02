@@ -1,17 +1,31 @@
 body{
 	background-color: #444;
+	margin: 0;
 }
-
 
 .sprite{
 	position: absolute;
 	left: 300px;
 	top: 300px;
 }
+
 .stage{
-	position: absolute;
 	width: 480px;
 	height: 360px;
 	background-color: white;
 	overflow: hidden;
+	position: absolute;
+	bottom: 40px;
+	left: 60px;
+}
+
+.textbox{
+	visibility: hidden;
+	position: absolute;
+	width: 100px;
+	background-color: white;
+	border: 3px solid gray;
+	color: black;
+	border-radius: 5px;
+	z-index: 1000;
 }

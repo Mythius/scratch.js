@@ -4,55 +4,62 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
 
-
 var file = {
-	save: function(name,text){
+	save: function(name,text,error){
 		fs.writeFile(name,text,e=>{
-		console.log(e);
+			if(!e) return;
+			if(error) error(e);
+			else console.log(e);
 		})
 	},
-	read: function(name,callback){
-	fs.readFile(name,(error,buffer)=>{
-			if (error) console.log(error);
-			else callback(buffer.toString());
+	read: function(name,callback,error){
+	fs.readFile(name,(e,buffer)=>{
+			if (e){
+				if(error) error(e);
+				else console.log(e);
+			} else callback(buffer.toString());
 		});
 	}
 }
 
-function saveImage(buffer){
-	var imageBuffer = request.file.buffer;
-	var imageName = 'public/images/map.png';
+function saveImage(filename,buffer){
+	var imageBuffer = buffer;
+	var imageName = filename;
 
 	fs.createWriteStream(imageName).write(imageBuffer);
 }
 
 
-function cd(d,er){
-	var dir = './projects/'+d;
+function md(d,err){
+	var dir = './'+d;
 	if(!fs.existsSync(dir)){
 		fs.mkdirSync(dir);
-	} else err('Exists');
+	} else {
+		if(err) err('Exists');
+	}
 }
 
-function createProject(name,owner,err){
-	file.read('save.json',json=>{
-		let save = JSON.parse(json);
-		let ok = true;
-		for(let s of save){
-			if(s.name == name) ok = false;
-			break;
-		}
-		if(ok){
-			save.push(new Project(name,owner));
-			file.save('save.json',JSON.stringify(save));
-			cd(name);
-			file.read('xconfig.json',e=>{
-				let config = JSON.parse(e);
-				config.owner = owner;
-				file.save('projects/'+name+'/config.json',JSON.stringify(config));
-			});
+function getProject(name,owner,cb){
+	var path = `site/projects/${owner}/${name}/`;
+	let d = file.read('users.json',j=>{
+		let data = JSON.parse(j);
+		let my = data.filter(e=>e.u == owner)[0];
+		if(my.projects.includes(name)){
+			file.read(path+'config.json',text=>{
+				cb(JSON.parse(text));
+			})
 		} else {
-			err(1);
+			data[data.indexOf(my)].projects.push(name);
+			file.save('users.json',JSON.stringify(data));
+			md(path);
+			file.read('xconfig.json',d=>{
+				let config = JSON.parse(d);
+				config.name = name;
+				config.owner = owner;
+				file.save(path+'config.json',JSON.stringify(config));
+				file.save(path+'assets.txt','');
+				cb(config);
+			});
 		}
 	});
 }
@@ -81,18 +88,86 @@ app.get(/.*/,function(request,response){
 	response.sendFile(path+'site/');
 });
 
+var opening = [];
 
+var uniq=0;
 
+md('site/projects');
 
 
 http.listen(port,()=>{console.log('Serving Port: '+port)});
 
 io.on('connection',function(socket){
-	var owner = "Matthias";
-	socket.on('new',name=>{
-		createProject(name,owner,e=>{
-			if(e) console.log(errors[e]);
+	var owner,project;
+	socket.on('open',name=>{
+		getProject(name,owner,proj=>{
+			socket.emit('project',proj);
+			file.read('users.json',text=>{
+				let users = JSON.parse(text);
+				let me = users.filter(u=>u.u==owner)[0];
+				socket.emit('data',me.projects);
+			});
 		});
 	});
-	//socket.emit('test');
+	socket.on('login',cred=>{
+		file.read('users.json',text=>{
+			let users = JSON.parse(text);
+			let me = users.filter(u => u.u==cred.u);
+			if(me.length){
+				me = me[0];
+				if(me.p != cred.p){
+					socket.emit('invalid');
+				} else {
+					owner = me.u;
+					socket.emit('data',me.projects);
+				}
+			} else {
+				cred.projects = [];
+				users.push(cred);
+				file.save('users.json',JSON.stringify(users));
+				
+				owner = cred.u;
+				md(`site/projects/${cred.u}/`);
+
+				socket.emit('data',[]);
+			}
+		});
+	});
+	socket.on('edit',config=>{
+		let id = uniq++;
+		opening.push({id,config});
+		socket.emit('go',id);
+	});
+	socket.on('lock',id=>{
+		let op = opening.filter(e=>e.id==id);
+		if(!op.length) {
+			socket.emit('kikout');
+			return;
+		}
+		op = op[0].config;
+		owner = op.owner;
+		project = op.name;
+		opening.splice(opening.indexOf(op),1);
+		socket.emit('config',op);
+	});
+	socket.on('save',data=>{
+		if(!owner) return;
+		var path = `site/projects/${owner}/${project}/`;
+		saveImage(path+data.name,data.blob);
+		file.read(path+'assets.txt',text=>{
+			file.save(path+'assets.txt',text+'\n'+data.name);
+		},error=>{
+			file.save(path+'assets.txt',data.name);
+		});
+	});
+	socket.on('code',code=>{
+		var path = `site/projects/${owner}/${project}/`;
+		file.read(path+'config.json',text=>{
+			let j = JSON.parse(text);
+			j.script = code;
+			let n = JSON.stringify(j);
+			file.save(path+'config.json',n);
+			socket.emit('saved');
+		})
+	})
 });

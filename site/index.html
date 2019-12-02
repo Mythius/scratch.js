@@ -2,17 +2,30 @@
 <html>
 <head>
 	<title>Scratch.JS</title>
-	<link rel="stylesheet" href="runtime.css">
+	<link rel="stylesheet" href="mainpage.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
 	<script src=helpers.js></script>
-	<script src=sprite.js></script>
-	<script src=scratch.js></script>
 	<script src=/socket.io/socket.io.js></script>
+	<style>
+	</style>
 </head>
 <body>
-	<div class="stage">
-		<canvas width=480 height=360></canvas>
-	</div>
-	<p></p>
-	<script src="main.js"></script>
+	<login>
+		<input placeholder="Username" id=u>
+		<br>
+		<input type=password placeholder="Password" id=p>
+		<br>
+		<button>Login</button>
+		<p id=note></p>
+	</login>
+	<explorer>
+		<ul id=left></ul>
+		<div id="proj">
+			<h3></h3>
+			<button id=edit>Edit</button>
+			<button id=close>Close<link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet"></button>
+		</div>
+	</explorer>
+	<script src=login.js></script>
 </body>
 </html>
