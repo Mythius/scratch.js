@@ -169,27 +169,22 @@ function getAssetData(){
 		obj('#spritelist').innerHTML = 'Sprites<br>';
 		if(!text) return;
 		let lines = text.split('\n');
-		console.log(lines)
+		console.log(lines);
 		for(let l of lines){
 			if(!l) continue;
 			let im = create('img');
 			im.src = PATH + l;
 			im.width=32;
 			let ol = create('ol',im);
-			console.log(ol);
 			ol.appendChild(create('p',l));
 			obj('#assetlist').appendChild(ol);
 		}
-		let b = create('button','New Sprite');
-		obj('#spritelist').appendChild(b);
-		b.on('click',function(){
-			
-		});
 	});
 }
 
 obj('#start').on('click',async function(){
 	print('Running');
+	debugger;
 	RUN(obj('code').innerText,done=>{
 		print('Stopped');
 	});

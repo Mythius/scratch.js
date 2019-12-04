@@ -33,13 +33,7 @@ function Sprite(data){
 
 
 
-	//this.touching = function(sprite){
-	//	let d1 = getDims();
-	//	let d2 = sprite.getDimensions();
-	//	let ox = Math.abs(d1.x - d2.x) < (d1.x < d2.x ? d2.width : d1.width);
-	//	let oy = Math.abs(d1.y - d2.y) < (d1.y < d2.y ? d2.height : d1.height);
-	//	return ox && oy;
-	//}
+	
 
 
 	// TODO -- DONE -- STARTED ------
@@ -53,11 +47,18 @@ function Sprite(data){
 	// DATA     [ ]		y
 	// CUSTOM 	[ ]		n
 
+	function getDims(){
+		return element.getBoundingClientRect();
+	}
+
+
+	this.getDimensions = getDims;
 
 	this.motion = new Motion();
 	this.looks = new Looks();
 	this.sound = new Sounds();
 	this.data = new Data();
+	this.sensing = new Sensing();
 	this.control = new Control();
 
 	this.setup = function(){
@@ -71,6 +72,7 @@ function Sprite(data){
 			let list = text.split('\n');
 			let done = true;
 			let missing = [];
+			console.log(list,srcs);
 			for(let s of srcs){
 				let i = list.includes(s);
 				done &= i;
@@ -93,7 +95,7 @@ function Sprite(data){
 		element.src = PATH + costumes[l.costume];
 
 		element.style.left = m.x + WIDTH/2 - m.center.x + 'px';
-		element.style.top = m.y*-1 + HEIGHT/2 - m.center.y + 'px';
+		element.style.top = m.y*-1 + HEIGHT/2 + m.center.y + 'px';
 
 
 		// APPLY TRANSOFRMATIONS ON SIZE / ROTATION
@@ -160,7 +162,7 @@ function Sprite(data){
 					y = mosueY;
 					moveImage();
 				} else {
-					console.error(thing + ' is not a valid option');
+					alert(thing + ' is not a valid option');
 				}
 			} else {
 				try{
@@ -169,7 +171,7 @@ function Sprite(data){
 					y = data.y - data.cneter.y;
 					moveImage();
 				} catch(e){
-					console.error('You cannot goTo '+thing);
+					alert('You cannot goTo '+thing);
 				}
 			}
 		}
@@ -218,7 +220,7 @@ function Sprite(data){
 			}
 			let mx = x + center.x;
 			let my = y - center.y;
-			if(ty >= my) dir = Math.atan((tx-mx)/(ty-my)) + Math.PI * 3/2;
+			if (ty >= my) dir = Math.atan((tx-mx)/(ty-my)) + Math.PI * 3/2;
 			else dir = Math.atan((tx-mx)/(ty-my)) + Math.PI / 2;
 			moveImage();
 		}
@@ -422,6 +424,16 @@ function Sprite(data){
 					resolve();
 				},secs*1000);
 			});
+		}
+	}
+
+	function Sensing(){
+		this.touching = function(sprite){
+			let d1 = getDims();
+			let d2 = sprite.getDimensions();
+			let ox = Math.abs(d1.x - d2.x) < (d1.x < d2.x ? d2.width : d1.width);
+			let oy = Math.abs(d1.y - d2.y) < (d1.y < d2.y ? d2.height : d1.height);
+			return ox && oy;
 		}
 	}
 
